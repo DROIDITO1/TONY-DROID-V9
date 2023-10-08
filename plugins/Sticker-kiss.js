@@ -1,1 +1,33 @@
-import{sticker}from'../lib/sticker.js';import _0x5d9a4c from'node-fetch';import _0x1a7afe from'@whiskeysockets/baileys';let handler=async(_0x482754,{conn:_0x158976})=>{try{if(_0x482754['quoted']?.['sender'])_0x482754['mentionedJid']['push'](_0x482754['quoted']['sender']);if(!_0x482754['mentionedJid']['length'])_0x482754['mentionedJid']['push'](_0x482754['sender']);let _0x3b3fd3=await _0x5d9a4c('https://nekos.life/api/kiss'),_0x5a289b=await _0x3b3fd3['json'](),{url:_0x30c29c}=_0x5a289b,_0x127846=await sticker(null,_0x30c29c,'+'+_0x482754['sender']['split']('@')[0x0]+'\x20le\x20dio\x20besos\x20a\x20'+_0x482754['mentionedJid']['map'](_0x45565e=>_0x45565e===_0x482754['sender']?'alguien\x20':'+'+_0x45565e['split']('@')[0x0])['join'](',\x20'));_0x158976['sendFile'](_0x482754['chat'],_0x127846,null,{'asSticker':!![]});}catch(_0x3980a0){}};handler['command']=/^(kiss|skiss|kis|besos|beso)$/i;export default handler;
+import fetch from 'node-fetch' 
+ import { sticker } from '../lib/sticker.js' 
+ //import db from '../lib/database.js' 
+  
+ let handler = async (m, { conn, args, usedPrefix, command }) => { 
+  
+          let who 
+     if (m.isGroup) who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false 
+     else who = m.chat 
+     if (!who) throw `🧑🏻‍💻 Etiqueta o menciona a alguien\n\nEjemplo: 👉 🏻${usedPrefix + command} @tag` 
+  
+     let user = global.db.data.users[who] 
+     let name = conn.getName(who)  
+    let name2 = conn.getName(m.sender)  
+    m.react(rwait) 
+  
+   let rki = await fetch(`https://api.waifu.pics/sfw/kiss`) 
+     if (!rki.ok) throw await rki.text() 
+    let jkis = await rki.json() 
+    let { url } = jkis 
+    let stiker = await sticker(null, url, `(${name2}) da un beso a`, `${name}`) 
+    conn.sendFile(m.chat, stiker, null, { asSticker: true }, m) 
+    m.react('🤪')  
+  
+ } 
+  
+ handler.help = ['kiss @tag'] 
+ handler.tags = ['rnime'] 
+ handler.command = /^(kiss|beso)$/i 
+ handler.diamond = false 
+ handler.group = true 
+  
+ export default handler
